@@ -47,8 +47,8 @@ pub(crate) struct Success {
 #[derive(Debug, Deserialize, PartialEq)]
 pub struct Auth0User {
     pub user_id: String,
-    pub email: String,
-    pub email_verified: bool,
+    pub email: Option<String>,
+    pub email_verified: Option<bool>,
     pub username: Option<String>,
     pub phone_number: Option<String>,
     pub phone_verified: Option<bool>,
@@ -84,8 +84,8 @@ impl Auth0User {
         for tgt_col in columns {
             let cell = match tgt_col.name.as_str() {
                 "user_id" => Some(Cell::String(self.user_id.clone())),
-                "email" => Some(Cell::String(self.email.clone())),
-                "email_verified" => Some(Cell::Bool(self.email_verified)),
+                "email" => self.email.take().map(Cell::String),
+                "email_verified" => self.email_verified.take().map(Cell::Bool),
                 "username" => self.username.take().map(Cell::String),
                 "phone_number" => self.phone_number.take().map(Cell::String),
                 "phone_verified" => self.phone_verified.take().map(Cell::Bool),

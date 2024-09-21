@@ -9,8 +9,8 @@ mod tests {
     fn auth0_smoketest() {
         let expected_data = Auth0User {
             user_id: "auth0|1234567890abcdef".to_string(),
-            email: "john@doe.com".to_string(),
-            email_verified: true,
+            email: Some("john@doe.com".to_string()),
+            email_verified: Some(true),
             username: Some("userexample".to_string()),
             phone_number: Some("123-456-7890".to_string()),
             phone_verified: Some(true),
@@ -96,8 +96,10 @@ mod tests {
                 .expect("Failed to select from auth0_users")
                 .map(|r| Auth0User {
                     user_id: r.get_by_name::<String, _>("user_id").unwrap().unwrap(),
-                    email: r.get_by_name::<String, _>("email").unwrap().unwrap(),
-                    email_verified: r.get_by_name::<bool, _>("email_verified").unwrap().unwrap(),
+                    email: Some(r.get_by_name::<String, _>("email").unwrap().unwrap()),
+                    email_verified: Some(
+                        r.get_by_name::<bool, _>("email_verified").unwrap().unwrap(),
+                    ),
                     username: r.get_by_name::<String, _>("username").unwrap(),
                     phone_number: r.get_by_name::<String, _>("phone_number").unwrap(),
                     phone_verified: r.get_by_name::<bool, _>("phone_verified").unwrap(),
